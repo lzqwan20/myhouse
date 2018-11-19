@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>门诊工作站</title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+		<script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+		<style>
+			*,body {
+				margin: 0;
+				padding: 0;				
+			}
+			body{
+				width: 100%;
+				height: 100%;
+				background:black ; 					
+			}
+			.top-nav{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height:8% ;
+				background:#242424;
+			}
+			.left-nav{			 
+				position:absolute;
+				top: 8%;				 
+				left: 0;
+				height: 92%;
+				width: 15%;
+				background:#242424;
+			}
+			.top-nav *{
+				color: white;
+				font-family:  Arial, Helvetica, sans-serif;
+			}
+			.page-box{
+				position: absolute;
+				top: 8%;
+				left: 15%;			 				  
+				height: 92%;
+				width: 85%;
+			}
+			.fatherlist{
+				height: 60px;
+				width: 100%;
+			}			
+			.fatherli{
+				font-family: Arial, Helvetica, sans-serif; 
+				color: white;
+				display:block;				 
+				width: 100%; 
+				line-height: 60px;
+				list-style: none;
+				text-indent: 30px;
+				font-size: 20px;
+				  			 			 				
+			}
+			.fatherli:hover{
+				cursor: pointer;
+				color: greenyellow; 
+			}			 
+			.sonlist{
+					display: none;	
+			}
+			.sonlist>li{
+				font-family: Arial, Helvetica, sans-serif; 
+				color: white;
+				display: block;
+				width: 100%;				 
+				line-height: 40px;
+				list-style: none;
+				text-indent: 60px;
+				border-bottom: 1px solid #ccc;
+			    font-size: 15px;
+			}
+			.sonlist>li:hover{
+				cursor: pointer;
+				 background: red;
+			}
+			.liclick{
+				background: blue;
+			}
+			.page-iframe{
+				width: 100%;
+				height: 100%;
+				background: blue;
+			    border: none;			   
+			}
+			#downlogin{
+				position: absolute;
+				top: 10px;
+				right:5px;
+			}
+			#connect{
+				position: absolute;
+				top: 10px;
+				right: 80px ; 				
+			}
+			 
+			
+		</style>
+		<script>			 			
+			$(function(){
+				//获取cookie
+				$("#user").html($.cookie("a"));
+				//获取本地时间
+				function current() {
+					var d = new Date();
+					str = '';
+					str += d.getFullYear() + '年'; //获取当前年份 
+					str += d.getMonth() + 1 + '月'; //获取当前月份（0——11） 
+					str += d.getDate() + '日';
+					str += d.getHours() + '时';
+					str += d.getMinutes() + '分';
+					str += d.getSeconds() + '秒';
+					return str;
+				};
+				//设置计时器	
+				setInterval(function() {
+					$("#time").html(current);
+				}, 1000);　　
+				$(".fatherli").click(function(){
+					$(this).children("ul").slideToggle(1000);
+					$(this).siblings().children("ul").slideUp(1000);				
+				});
+				$(".sonlist>li").click(function(){
+					//改变后改变背景色
+					$(this).addClass("liclick");
+					$(this).siblings().removeClass("liclick");
+					$(this).parent().parent().siblings().find("li").removeClass("liclick");
+					//阻止事件冒泡
+					return false;
+				});
+				//设置退出和联系管理员模态框
+				$("#tuichu").dialog(
+					{autoOpen: false,modal:true,draggable:false,
+      				show: {effect: "blind",duration: 500},      				 
+      				 buttons:{确定:function(){window.location.replace("index.html");},}
+    				});
+    			$("#con").dialog({autoOpen: false,modal:true,draggable:false,show:{effect: "blind",duration:500},});
+				//设置退出和联系管理员按钮
+				$("#downlogin").button();
+				$("#connect").button();
+				$("#downlogin").click(function() {
+					$("#tuichu").dialog("open");					 
+				});
+				$("#connect").click( function() {
+					$("#con").dialog("open");
+				});
+				
+				
+			})
+		</script>
+	</head>
+	<body>
+		<!--退出模态框-->
+		<div id="tuichu" title="系统提示">
+			<h3 style="text-align: center;">确定要退出吗？</h3>
+		</div>
+		<!--联系管理员模态框-->
+		<div id="con" title="管理员信息" >
+			<p>管理员电话：18402059288</p>
+			<p>管理员邮箱：2875888382@qq.com</p>
+		</div>
+		<!--顶部导航栏-->
+		<div class="top-nav">
+			<a id="connect">联系管理员 </a>
+			<a id="downlogin">退出</a>
+			<span id="time"></span>
+			<span id="user"style="line-height: 40px;float: left; "></span>
+		</div>
+		<!--左侧导航栏-->
+		<div class="left-nav">
+			<ul class="fatherlist">
+				<li class="fatherli">挂号管理
+					<ul class="sonlist">
+						<li>当日挂号</li>
+						<li>当日结账</li>
+						<li>取消挂号</li>
+						<li>号码调整</li>
+					</ul>
+				</li>
+				<li class="fatherli">病人管理
+					<ul class="sonlist">
+						<li>病人信息查询</li>
+						<li>病人信息修改</li>
+						<li>黑名单管理</li>						 
+					</ul>
+				</li>
+				<li class="fatherli">查询统计
+					<ul class="sonlist">
+						<li>挂号查询</li>
+						<li>挂号交款报表</li>
+						<li>挂号收费汇总统计</li>
+						<li>挂号未交款报表</li>
+						<li>挂号员工作量</li>
+						<li>科室医生工作量</li>
+						<li>交款按收费员汇总</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<!--分页面容器-->
+		<div class="page-box">
+			<iframe class="page-iframe" src="G-1.html"></iframe>
+		</div>
+	</body>
+</html>

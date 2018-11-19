@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>HIS系统登录页面</title>
+		<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+		<script src="http://cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+		<script>
+		$(function(){
+			//设置计时器
+				var timer;
+				var offset=0;
+				function autoplay(){
+					timer=setInterval(function(){
+						offset += -10;
+						if(offset<=-outerWidth*2){
+							offset=0;
+						};
+						$(".back").css("margin-left",offset);
+					},100);
+				};
+				autoplay();
+			//登录模态框
+			 $(".modalbox").dialog({
+			 	autoOpen: false,
+			 	modal:true,
+			 	draggable:false,
+			 	resizable: false,
+			 	width:410,
+			 	height:300,
+			 	title:"登录",
+			 	show: {effect: "blind",duration: 1000},
+			 	hide: {effect: "explode", duration: 1000 },
+			 });
+			 //登录按钮
+			 $("#login").button();
+			 $("#login-btn").button();
+			 $("#login-btn").click(function(){
+			 	$(".modalbox").dialog("open");
+			 });
+			 //登录状态模态框
+			 $(".loginstatus").dialog({
+			 	autoOpen:false,
+			 	modal:true,
+			 	draggable:false,
+			 	resizable: false,
+			 	width:200,
+			 	height:100,
+			 	title:"系统提示",
+			 	show: {effect: "blind",duration: 500},
+			 	hide: {effect: "blind",duration: 500},
+			 });
+			 $("#login").click(function(){
+			 	//判断账号是否为空
+			 	if($("#name").val()==""){
+			 		$(".loginstatus").children("h3").text("账号不能为空");
+			 		$(".loginstatus").dialog("open");
+			 	};
+			 	//判断密码是否为空
+			 	if($("#name").val()!==""&&$("#pwd").val()==""){
+			 		$(".loginstatus").children("h3").text("密码不能为空");
+			 		$(".loginstatus").dialog("open");
+			 	};
+			 	
+			 	//账号密码不为空时，发送数据到后台
+			 	if($("#name").val()!==""&&$("#pwd").val()!==""){			 		 
+			 		$.ajax({
+			 			type:"post",
+			 			url:"../HIS_01/login",
+			 			async:true,
+			 			data:"username="+$("#name").val()+"&userpassword="+$("#pwd").val(),
+			 			success:function(xml){
+			 				if(xml=="密码正确"){
+			 				//设置cookie
+			 				$.cookie("a",$("#name").val(),{path:"/111"}); 	
+					 		window.location.replace("Outpatient-service.html");
+					 		};
+			 				if(xml=="密码错误"){
+			 				$(".loginstatus").children("h3").text("密码错误");
+			 				$(".loginstatus").dialog("open");
+			 				};
+					 	},
+					 	error:function(xml){
+					 		$(".loginstatus").children("h3").text("无法连接到服务器");
+			 				$(".loginstatus").dialog("open");
+					 	}
+			 		});
+			 	}			 				 				 	
+			 });
+		})
+		</script>
+		<style>
+			*,body{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				width: 100%;
+				height: 100%;
+				background-color: #000;
+			}
+			.modalbox{
+				position: relative;				 
+			}
+			.loginbox{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 410px;
+				height: 200px;				 
+				border-bottom:  1px solid #ccc;
+			}
+			#login{
+				width: 200px;
+				height: 40px;				 
+				position: absolute; 
+				bottom:3px;
+				left: 110px;
+			}
+			input{
+				width: 300px;
+				height: 40px;
+				margin: 30px 50px 10px 50px;
+			}
+			.status{
+				 text-align: center;
+			}			 
+			.last-nav{
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 10%;
+				background:#000;
+				opacity:0.4;
+			}
+			.last-nav>p{
+				margin-top: 20px;
+				text-align: center;
+				color: white;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			.mid-box{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: #000;
+				overflow: hidden;
+			}
+			.mid-box>.img1{
+				opacity:0.7;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 70%;				
+			}
+			 
+			.mid-box>ul{
+				width: 400%;
+				height: 100%;
+			}
+			.mid-box>ul>li{
+				width: 25%;
+				height: 100%;
+				list-style: none;
+				float: left;
+			}
+			.mid-box>ul>li>img{
+				width: 100%;
+				height: 100%;
+				opacity:0.6;
+			}
+			.top-right-list{
+				position: absolute;
+				left: 70%;
+				top: 0;
+				height: 80px;
+				width: 30%;
+				border-bottom: 1px solid mediumpurple;				 
+			}
+			.top-right-list>ul{				
+				list-style: none;
+				height: 80px;				 
+			}
+			.top-right-list>ul>li{
+				font-family: Arial, Helvetica, sans-serif;
+				line-height: 80px;
+				text-align: center;				 
+				color: white;
+				display:block;
+				height: 80px;
+				width: 33%;
+				float: left;	
+			}
+			.top-right-list>ul>li:hover{
+				cursor: pointer;
+				background: darkseagreen;
+				color: gainsboro;
+			}
+			.word-box{
+				position: absolute;
+				top: 150px;
+				left: 20%;
+				width: 400px;
+				font-family: Arial, Helvetica, sans-serif;
+				color: white;
+				line-height: 60px;
+			}
+			.word-box>h3{
+				line-height: 30px;
+				text-indent: 40px;
+			} 
+		</style>
+	</head>
+	<body>
+		<!--登录模态框-->
+		<div class="modalbox">
+			<form class="loginbox">
+			<input type="text"placeholder="账号"id="name"name="name">
+			<input type="password"placeholder="密码"id="pwd"name="pwd">
+			</form>
+			<button id="login">登录</button>
+		</div>
+		<!--登录状态（成功与失败）模态框-->
+		<div class="loginstatus">
+			<h3 class="status"></h3>
+		</div>		 
+		<!--中部-->
+		<div class="mid-box">
+			<img src="img/广州中医药大学官网.png" class="img1">
+			<ul class="back">
+				<li><img src="img/u=3619084367,816845467&fm=200&gp=0.jpg"></li>
+				<li><img src="img/u=702322186,2853262132&fm=26&gp=0.jpg"></li>
+				<li><img src="img/u=3619084367,816845467&fm=200&gp=0.jpg"></li>
+			</ul>	
+			<!--右上角登录栏-->
+			<div class="top-right-list">
+				<ul>
+					<li>关于我们</li>
+					<li>广告联系</li>
+					<li><a id="login-btn">登录</a></li>
+				</ul>
+			</div>
+			<!--图片上加文字-->
+			<div class="word-box">
+				 <h1>医院信息管理系统HIS</h1>
+				 <h3>广州中医药大学创办于1956年，是新中国首批建立的四所中医药高等学校之一，先后直属国家卫生部、国家中医 </h3>
+			</div>
+		</div>
+		<!--尾部栏-->
+		<div class="last-nav">
+			<p>coperight@广州中医药大学</p>
+		</div>
+	</body>
+</html>
